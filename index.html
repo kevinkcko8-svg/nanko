@@ -8,6 +8,21 @@
   <title>南柯紀事</title>
   <link rel="stylesheet" href="styles.css">
   <script defer src="data.js"></script>
+  <script>
+    window.NANKE_READY = fetch('./南柯紀事-完整備份_周紀三_正文四格縮排.json', { cache: 'no-store' })
+      .then(response => {
+        if (!response.ok) throw new Error('JSON 載入失敗：' + response.status);
+        return response.json();
+      })
+      .then(latestData => {
+        window.NANKE_DATA = latestData;
+        return latestData;
+      })
+      .catch(error => {
+        console.warn('改用 data.js 內建資料：', error);
+        return window.NANKE_DATA;
+      });
+  </script>
   <script defer src="app.js"></script>
 </head>
 <body>
