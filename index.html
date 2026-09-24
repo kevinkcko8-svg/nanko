@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="styles.css">
   <script defer src="data.js"></script>
   <script>
-    window.NANKE_READY = fetch('./南柯紀事-完整備份_周紀三_正文四格縮排.json', { cache: 'no-store' })
+    window.NANKE_READY = fetch('./site-data.json', { cache: 'no-store' })
       .then(response => {
         if (!response.ok) throw new Error('JSON 載入失敗：' + response.status);
         return response.json();
