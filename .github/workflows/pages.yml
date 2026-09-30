@@ -15,10 +15,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
       - run: node scripts/build.mjs
+      - run: node scripts/stats.mjs
       - run: node scripts/check.mjs
       - run: node scripts/package.mjs
       - uses: actions/upload-pages-artifact@v3
