@@ -8,7 +8,7 @@
   <title>作者工作台｜南柯紀事</title>
   <link rel="stylesheet" href="styles.css">
   <style>
-    #authorGate{min-height:100vh;display:grid;place-items:center;background:#f7f5ef;padding:24px;box-sizing:border-box}
+    #authorGate{min-height:100vh;display:grid;place-items:center;background:#f7f5ef;padding:24px;box-sizing:border-box}#authorGate[hidden]{display:none!important}
     .gate-card{width:min(430px,100%);background:#fffdf8;border:1px solid #d9ddd4;padding:28px;box-shadow:0 16px 45px #00000012}
     .gate-card h1{margin:0 0 10px;font-size:26px}.gate-card p{color:#667268;line-height:1.7}
     .gate-card input{width:100%;box-sizing:border-box;padding:12px;border:1px solid #b9c2b7;background:white;margin:10px 0}
@@ -71,7 +71,7 @@
       await script('./app.js');
       await script('./assets/dev-log-editor.js');
     }
-    form.addEventListener('submit',async e=>{e.preventDefault();error.textContent='';const h=await digest(input.value);if(h!==HASH){error.textContent='密碼不正確。';input.select();return}sessionStorage.setItem(SESSION,'1');input.value='';await unlock()});
+    form.addEventListener('submit',async e=>{e.preventDefault();error.textContent='驗證中…';try{const h=await digest(input.value);if(h!==HASH){error.textContent='密碼不正確。';input.select();return}sessionStorage.setItem(SESSION,'1');input.value='';await unlock();if(!workspace.hidden)error.textContent='';}catch(err){console.error(err);error.textContent='驗證或載入失敗，請重新整理後再試。';}});
     document.getElementById('lockWorkspace').addEventListener('click',()=>{sessionStorage.removeItem(SESSION);location.reload()});
     if(sessionStorage.getItem(SESSION)==='1')unlock();
   })();
