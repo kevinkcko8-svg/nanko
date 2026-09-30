@@ -3,41 +3,21 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#f7f5ef">
-  <meta name="description" content="南柯紀事：以朝代、紀與紀事編次的中國歷史文字與史料。">
-  <title>作者工作台｜南柯紀事</title>
-  <link rel="stylesheet" href="styles.css">
   <meta name="robots" content="noindex,nofollow">
-  <script src="data.js"></script>
-  <script>
-    window.NANKE_READY = fetch('./site-data.json', { cache: 'no-store' })
-      .then(response => { if (!response.ok) throw new Error('載入失敗'); return response.json(); })
-      .then(latestData => { window.NANKE_DATA = latestData; return latestData; })
-      .catch(error => { console.warn('使用內建資料', error); return window.NANKE_DATA; });
-  </script>
-  <script defer src="app.js"></script>
-  <script defer src="./assets/dev-log-editor.js"></script>
+  <meta name="theme-color" content="#f7f5ef">
+  <title>作者工作台未公開｜南柯紀事</title>
+  <style>
+    body{margin:0;background:#f7f5ef;color:#3e4840;font:16px/1.8 system-ui,sans-serif;display:grid;place-items:center;min-height:100vh;padding:24px;box-sizing:border-box}
+    main{max-width:620px;background:#fffdf8;border:1px solid #dcded3;padding:36px;border-radius:4px}
+    h1{font-family:serif;color:#263a32;margin-top:0}a{color:#355749}
+  </style>
 </head>
 <body>
-  <div style="padding:10px 22px;background:#e9eee5;font-size:13px">作者工作台：編輯只會儲存在目前瀏覽器。 <a href="index.html" style="text-decoration:underline">返回公開閱讀版 →</a></div>
-  <header class="topbar">
-    <div class="topbar-inner">
-      <a class="brand" href="#/" aria-label="南柯紀事首頁"><span class="brand-mark">柯</span><span class="brand-name">南柯紀事</span></a>
-      <nav class="topnav" aria-label="主導覽">
-        <a href="#/" data-nav="home">首頁</a>
-        <a href="#/contents" data-nav="contents">正文目錄</a>
-        <a href="#/sources" data-nav="sources">史料目錄</a>
-      </nav>
-      <div class="top-actions"><button id="manageBtn" class="text-button" type="button">編輯與備份</button><button id="menuBtn" class="menu-button" type="button" aria-label="開啟目錄" aria-expanded="false">☰</button></div>
-    </div>
-  </header>
-  <div id="mobileShade" class="mobile-shade" hidden></div>
-  <div class="site-body">
-    <aside id="sidebar" class="sidebar" aria-label="篇目導覽"></aside>
-    <main id="main" class="main" tabindex="-1"></main>
-  </div>
-  <footer class="footer"><span>南柯紀事</span><span>序時記事 · 逐事而書</span></footer>
-  <dialog id="editorDialog" class="editor-dialog"><div id="editorRoot"></div></dialog>
-  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <main>
+    <p>AUTHOR WORKSPACE</p>
+    <h1>作者工作台未公開</h1>
+    <p>這個頁面不再提供公開編輯功能。南柯紀事的作者工具與發布流程已與公開閱讀版分開。</p>
+    <p><a href="./index.html">← 返回南柯紀事</a></p>
+  </main>
 </body>
 </html>
