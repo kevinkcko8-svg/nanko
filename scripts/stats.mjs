@@ -65,6 +65,7 @@ const anchor='</section>\n<section class="wrap section">';
 if(!html.includes(anchor))throw new Error('Could not find home-page insertion point');
 html=html.replace(anchor,`</section>${section}\n<section class="wrap section">`);
 html=html.replace('以史為鑑<br>逐事而書','序時記事<br>逐事而書');
+html=html.replace(/<a href="[^\"]*editor\.html">作者工作台<\/a>/g,'');
 html=html.replace('</head>','<link rel="stylesheet" href="./assets/stats.css"></head>');
 fs.writeFileSync(indexPath,html);
 console.log(`Progress: ${current.characters} chars, ${current.sources} sources, today ${todayChars>=0?'+':''}${todayChars}`);
