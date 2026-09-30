@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f7f5ef">
+  <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
+  <title>作者工作台｜南柯紀事</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    #authorGate{min-height:100vh;display:grid;place-items:center;background:#f7f5ef;padding:24px;box-sizing:border-box}
+    .gate-card{width:min(430px,100%);background:#fffdf8;border:1px solid #d9ddd4;padding:28px;box-shadow:0 16px 45px #00000012}
+    .gate-card h1{margin:0 0 10px;font-size:26px}.gate-card p{color:#667268;line-height:1.7}
+    .gate-card input{width:100%;box-sizing:border-box;padding:12px;border:1px solid #b9c2b7;background:white;margin:10px 0}
+    .gate-error{min-height:22px;color:#9c3f35;font-size:13px}.gate-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    #authorWorkspace[hidden]{display:none!important}
+  </style>
+</head>
+<body>
+  <section id="authorGate" aria-labelledby="gateTitle">
+    <div class="gate-card">
+      <div style="font-size:12px;letter-spacing:.12em;color:#68766d;margin-bottom:8px">NANKE JISHI · AUTHOR</div>
+      <h1 id="gateTitle">作者工作台</h1>
+      <p>此頁不在公開網站導覽中。請輸入作者密碼後進入。</p>
+      <form id="gateForm">
+        <label for="gatePassword">密碼</label>
+        <input id="gatePassword" type="password" autocomplete="current-password" required autofocus>
+        <div id="gateError" class="gate-error" role="alert"></div>
+        <div class="gate-actions"><button class="primary-button" type="submit">進入工作台</button><a href="index.html">返回公開網站</a></div>
+      </form>
+    </div>
+  </section>
+
+  <div id="authorWorkspace" hidden>
+    <div style="padding:10px 22px;background:#e9eee5;font-size:13px">作者工作台：草稿會儲存在目前瀏覽器。 <a href="index.html" style="text-decoration:underline">返回公開閱讀版 →</a> <button id="lockWorkspace" class="text-button" type="button" style="float:right">鎖定工作台</button></div>
+    <header class="topbar">
+      <div class="topbar-inner">
+        <a class="brand" href="#/" aria-label="南柯紀事首頁"><span class="brand-mark">柯</span><span class="brand-name">南柯紀事</span></a>
+        <nav class="topnav" aria-label="主導覽">
+          <a href="#/" data-nav="home">首頁</a>
+          <a href="#/contents" data-nav="contents">正文目錄</a>
+          <a href="#/sources" data-nav="sources">史料目錄</a>
+        </nav>
+        <div class="top-actions"><button id="manageBtn" class="text-button" type="button">編輯與備份</button><button id="menuBtn" class="menu-button" type="button" aria-label="開啟目錄" aria-expanded="false">☰</button></div>
+      </div>
+    </header>
+    <div id="mobileShade" class="mobile-shade" hidden></div>
+    <div class="site-body">
+      <aside id="sidebar" class="sidebar" aria-label="篇目導覽"></aside>
+      <main id="main" class="main" tabindex="-1"></main>
+    </div>
+    <footer class="footer"><span>南柯紀事</span><span>序時記事 · 逐事而書</span></footer>
+    <dialog id="editorDialog" class="editor-dialog"><div id="editorRoot"></div></dialog>
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  </div>
+
+  <script>
+  (()=>{'use strict';
+    const HASH='db92dd2d200461fd39c814768825a7aebd1adb2a875a8d2e171012d7d2595b54';
+    const SESSION='nanke-author-unlocked-v1';
+    const gate=document.getElementById('authorGate'),workspace=document.getElementById('authorWorkspace'),form=document.getElementById('gateForm'),input=document.getElementById('gatePassword'),error=document.getElementById('gateError');
+    const hex=bytes=>Array.from(new Uint8Array(bytes)).map(b=>b.toString(16).padStart(2,'0')).join('');
+    const digest=async value=>hex(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(value)));
+    const script=src=>new Promise((resolve,reject)=>{const s=document.createElement('script');s.src=src;s.onload=resolve;s.onerror=reject;document.body.appendChild(s)});
+    let loaded=false;
+    async function unlock(){
+      if(loaded)return;
+      loaded=true;gate.hidden=true;workspace.hidden=false;
+      await script('./data.js');
+      window.NANKE_READY=fetch('./site-data.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('載入失敗');return r.json()}).then(d=>{window.NANKE_DATA=d;return d}).catch(e=>{console.warn('使用內建資料',e);return window.NANKE_DATA});
+      await script('./app.js');
+      await script('./assets/dev-log-editor.js');
+    }
+    form.addEventListener('submit',async e=>{e.preventDefault();error.textContent='';const h=await digest(input.value);if(h!==HASH){error.textContent='密碼不正確。';input.select();return}sessionStorage.setItem(SESSION,'1');input.value='';await unlock()});
+    document.getElementById('lockWorkspace').addEventListener('click',()=>{sessionStorage.removeItem(SESSION);location.reload()});
+    if(sessionStorage.getItem(SESSION)==='1')unlock();
+  })();
+  </script>
+</body>
+</html>
