@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import path from 'node:path';
 import {execFileSync} from 'node:child_process';
 
 const dataPath='site-data.json';
@@ -65,7 +66,21 @@ const anchor='</section>\n<section class="wrap section">';
 if(!html.includes(anchor))throw new Error('Could not find home-page insertion point');
 html=html.replace(anchor,`</section>${section}\n<section class="wrap section">`);
 html=html.replace('以史為鑑<br>逐事而書','序時記事<br>逐事而書');
-html=html.replace(/<a href="[^\"]*editor\.html">作者工作台<\/a>/g,'');
 html=html.replace('</head>','<link rel="stylesheet" href="./assets/stats.css"></head>');
 fs.writeFileSync(indexPath,html);
+
+const removeAuthorLink=file=>{
+  let text=fs.readFileSync(file,'utf8');
+  text=text.replace(/<a href="[^\"]*editor\.html">作者工作台<\/a>/g,'');
+  fs.writeFileSync(file,text);
+};
+const walk=dir=>{
+  for(const item of fs.readdirSync(dir,{withFileTypes:true})){
+    const p=path.join(dir,item.name);
+    if(item.isDirectory())walk(p);
+    else if(item.isFile()&&item.name.endsWith('.html')&&item.name!=='editor.html')removeAuthorLink(p);
+  }
+};
+walk('.');
+
 console.log(`Progress: ${current.characters} chars, ${current.sources} sources, today ${todayChars>=0?'+':''}${todayChars}`);
