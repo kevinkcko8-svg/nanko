@@ -16,6 +16,7 @@
       .catch(error => { console.warn('使用內建資料', error); return window.NANKE_DATA; });
   </script>
   <script defer src="app.js"></script>
+  <script defer src="./assets/dev-log-editor.js"></script>
 </head>
 <body>
   <div style="padding:10px 22px;background:#e9eee5;font-size:13px">作者工作台：編輯只會儲存在目前瀏覽器。 <a href="index.html" style="text-decoration:underline">返回公開閱讀版 →</a></div>
@@ -35,7 +36,7 @@
     <aside id="sidebar" class="sidebar" aria-label="篇目導覽"></aside>
     <main id="main" class="main" tabindex="-1"></main>
   </div>
-  <footer class="footer"><span>南柯紀事</span><span>以史為鑑 · 逐事而書</span></footer>
+  <footer class="footer"><span>南柯紀事</span><span>序時記事 · 逐事而書</span></footer>
   <dialog id="editorDialog" class="editor-dialog"><div id="editorRoot"></div></dialog>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 </body>
