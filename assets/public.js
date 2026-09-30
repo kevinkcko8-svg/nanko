@@ -18,6 +18,8 @@ document.querySelectorAll('[data-copy-link]').forEach(button=>button.addEventLis
   try{await navigator.clipboard.writeText(location.href);announce('本篇連結已複製');}
   catch{window.prompt('請複製以下連結：',location.href);}
 }));
+const poem=document.querySelector('.vertical-poem');
+if(poem)poem.innerHTML='序時記事<br>逐事而書';
 const input=document.getElementById('site-search');if(!input)return;
 const results=document.getElementById('search-results'),summary=document.getElementById('search-summary');
 let indexPromise,sequence=0;
