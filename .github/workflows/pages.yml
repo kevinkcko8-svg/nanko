@@ -22,7 +22,7 @@ jobs:
           node-version: '22'
       - run: node scripts/build.mjs
       - run: node scripts/stats.mjs
-      - run: node scripts/fix-author-gate.mjs
+      - run: node scripts/author-link.mjs
       - run: node scripts/check.mjs
       - name: Sync generated public pages back to main
         if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
