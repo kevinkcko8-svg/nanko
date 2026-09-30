@@ -6,7 +6,7 @@ on:
     branches: [main]
   workflow_dispatch:
 permissions:
-  contents: read
+  contents: write
 concurrency:
   group: pages-${{ github.ref }}
   cancel-in-progress: true
@@ -23,6 +23,16 @@ jobs:
       - run: node scripts/build.mjs
       - run: node scripts/stats.mjs
       - run: node scripts/check.mjs
+      - name: Sync generated public pages back to main
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html contents.html sources.html community.html about.html sitemap.xml articles sources assets/search-index.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Rebuild public pages from site-data.json"
+            git push origin HEAD:main
+          fi
       - run: node scripts/package.mjs
       - uses: actions/upload-pages-artifact@v3
         with:
