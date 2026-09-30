@@ -2,8 +2,10 @@ import fs from 'node:fs';
 import {execFileSync} from 'node:child_process';
 
 const dataPath='site-data.json';
+const logPath='dev-log.json';
 const indexPath='index.html';
 const data=JSON.parse(fs.readFileSync(dataPath,'utf8'));
+const devLog=fs.existsSync(logPath)?JSON.parse(fs.readFileSync(logPath,'utf8')):{entries:[]};
 
 const entriesOf=d=>d.dynasties.flatMap(x=>x.chronicles.flatMap(c=>c.entries));
 const statsOf=d=>{
@@ -35,25 +37,12 @@ try{
 const todayChars=current.characters-baseline.characters;
 const todaySources=current.sources-baseline.sources;
 
-let updates=[];
-try{
-  const lines=git('log','-8','--format=%H%x09%cI%x09%s','--',dataPath).split('\n').filter(Boolean);
-  updates=lines.map(line=>{
-    const [sha,date,...subjectParts]=line.split('\t');
-    const subject=subjectParts.join('\t');
-    const after=statsOf(readAt(sha));
-    let before={characters:0,sources:0};
-    try{before=statsOf(readAt(`${sha}^`));}catch{}
-    return {sha,date,subject,chars:after.characters-before.characters,sources:after.sources-before.sources};
-  });
-}catch{}
-
 const fmt=n=>new Intl.NumberFormat('zh-TW').format(n);
 const signed=n=>`${n>0?'+':''}${fmt(n)}`;
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const dateLabel=iso=>new Intl.DateTimeFormat('zh-TW',{timeZone:'Asia/Taipei',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(iso));
+const dateLabel=date=>new Intl.DateTimeFormat('zh-TW',{timeZone:'Asia/Taipei',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(`${date}T12:00:00+08:00`));
 
-const history=updates.length?updates.map(u=>`<li><time datetime="${esc(u.date)}">${esc(dateLabel(u.date))}</time><div><strong>${esc(u.subject||'更新史料與正文')}</strong><span>${signed(u.chars)} 字${u.sources?` · ${signed(u.sources)} 則史料`:''}</span></div></li>`).join(''):'<li><div><strong>更新紀錄將從 Git 歷史自動產生</strong></div></li>';
+const history=(devLog.entries||[]).length?(devLog.entries||[]).map(u=>`<li><time datetime="${esc(u.date)}">${esc(dateLabel(u.date))}</time><div><strong>${esc(u.title||'開發紀錄')}</strong>${u.body?`<span>${esc(u.body)}</span>`:''}</div></li>`).join(''):'<li><div><strong>尚無開發者紀錄</strong></div></li>';
 const section=`
 <section class="wrap section progress-section" aria-labelledby="progress-title">
   <div class="section-heading"><div><p class="eyebrow">PROJECT PROGRESS</p><h2 id="progress-title">南柯正在長大</h2></div><span class="progress-date">統計至 ${esc(taipeiDate)}</span></div>
@@ -63,14 +52,15 @@ const section=`
     <article class="stat-card"><span>史料來源</span><strong>${fmt(current.sources)}</strong><small>則</small></article>
     <article class="stat-card"><span>整理進度</span><strong>${fmt(current.entries)}</strong><small>篇紀事 · ${fmt(current.sections)} 小節</small></article>
   </div>
-  <details class="update-log"><summary>最近更新紀錄</summary><ol>${history}</ol></details>
-  <p class="stats-note">字數統計不含空白；「今日新增」以台北時間 00:00 起，和當日前最後一版比較，由 Git 歷史自動計算。</p>
+  <details class="update-log"><summary>開發者紀錄</summary><ol>${history}</ol></details>
+  <p class="stats-note">正文總字數與史料數由目前資料計算；開發者紀錄由站主自行編寫。</p>
 </section>`;
 
 let html=fs.readFileSync(indexPath,'utf8');
 const anchor='</section>\n<section class="wrap section">';
 if(!html.includes(anchor))throw new Error('Could not find home-page insertion point');
 html=html.replace(anchor,`</section>${section}\n<section class="wrap section">`);
+html=html.replace('以史為鑑<br>逐事而書','序時記事<br>逐事而書');
 html=html.replace('</head>','<link rel="stylesheet" href="./assets/stats.css"></head>');
 fs.writeFileSync(indexPath,html);
 console.log(`Progress: ${current.characters} chars, ${current.sources} sources, today ${todayChars>=0?'+':''}${todayChars}`);
