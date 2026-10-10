@@ -37,7 +37,7 @@
 .art-bottom { bottom: 24px; right: 20px; font-size: 16px; letter-spacing: 3px; }
 .art-seal {
   font-family: "FZXiaoZhuanTi-S13T", "方正小篆体", "小篆", "篆書", "篆体", "DFKai-SB", "BiauKai", var(--serif);
-  font-size: 26px;
+  font-size: 40px;
   top: 36%;
   left: 10%;
   gap: 5px;
