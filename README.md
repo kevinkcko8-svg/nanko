@@ -51,3 +51,16 @@ python -m http.server 8765
 以 `http://localhost:8765/` 預覽。搜尋與發布資料載入需要 HTTP，不建議直接雙擊 HTML。`node scripts/package.mjs` 產生可部署的 `_site`。
 
 公開網址與討論儲存庫目前設定於 `scripts/build.mjs`。若改網址，需同步修改並重建。保留原站名；目前未修改原始正文、史料或編排順序。
+
+## Google 搜尋收錄（一次性設定）
+
+網站已有完整靜態正文、獨立文章網址、canonical 與 15 個公開網址的 sitemap。這些使內容可被檢索，但不等同於已由 Google 收錄。
+
+1. 前往 https://search.google.com/search-console ，新增「網址前置字元」資源：`https://kevinkcko8-svg.github.io/nanko/`。
+2. 選擇「HTML 標記」驗證，將 Google 提供的 `content` 值填入 `site-seo.json` 的 `googleSiteVerification`。不要填整段 HTML，也不要填帳號密碼。
+3. 提交到 main，等網站部署完成，再回 Search Console 按「驗證」。建置器會持續把標記放在首頁，後續更新史料不會移除它。
+4. 在「Sitemap」提交 `https://kevinkcko8-svg.github.io/nanko/sitemap.xml`。
+5. 在「網址審查」輸入首頁網址，查看即時測試及索引狀態，必要時按「要求建立索引」。也可優先提交一篇完整紀事。
+6. 以 Search Console 回報為準追蹤「已發現／已檢索／已建立索引」狀態；檢索可能需數天至數週，提交不保證收錄或排名。
+
+`robots.txt` 必須放在網域根目錄；放在 `/nanko/robots.txt` 並不能控制這個專案的檢索。網域根目錄目前回傳 404，本身不等於禁止檢索。本專案以 Search Console 提交 sitemap，無須為此遷移網站或購買網域。

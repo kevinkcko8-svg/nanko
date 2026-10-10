@@ -7,6 +7,8 @@ const data=JSON.parse(fs.readFileSync(path.join(root,'site-data.json'),'utf8'));
 const site='https://kevinkcko8-svg.github.io/nanko/';
 const repo='https://github.com/kevinkcko8-svg/nanko';
 const brand='南柯紀事';
+const seo=JSON.parse(fs.readFileSync(path.join(root,'site-seo.json'),'utf8'));
+if(typeof seo.googleSiteVerification!=='string')throw Error('googleSiteVerification must be a string');
 const subtitle='中國歷史・史料整理與討論';
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const clean=s=>String(s??'').replace(/\s+/g,' ').trim();
@@ -35,7 +37,9 @@ function shell(file,title,desc,body,active='read',structured={}){
   const json=JSON.stringify({'@context':'https://schema.org','@type':'WebPage',name:title,url:canonical,description:desc,inLanguage:'zh-Hant',...structured}).replace(/</g,'\\u003c');
   const result=`<!doctype html>
 <html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>${esc(title)}｜${brand}</title><meta name="description" content="${esc(desc)}"><meta name="theme-color" content="#f7f5ef">
+<title>${file==='index.html'?brand+'｜'+esc(title):esc(title)+'｜'+brand}</title><meta name="description" content="${esc(desc)}"><meta name="theme-color" content="#f7f5ef">
+${file==='index.html'&&seo.googleSiteVerification?`<meta name="google-site-verification" content="${esc(seo.googleSiteVerification)}">`: ''}
+<link rel="sitemap" type="application/xml" href="${site}sitemap.xml">
 <link rel="canonical" href="${canonical}"><meta property="og:type" content="${structured['@type']==='Article'?'article':'website'}"><meta property="og:locale" content="zh_TW"><meta property="og:site_name" content="${brand}"><meta property="og:title" content="${esc(title)}｜${brand}"><meta property="og:description" content="${esc(desc)}"><meta property="og:url" content="${canonical}">
 <link rel="icon" href="${href('assets/seal.svg')}" type="image/svg+xml"><link rel="stylesheet" href="${href('assets/public.css')}"><script type="application/ld+json">${json}</script><script defer src="${href('assets/public.js')}"></script></head>
 <body data-base="${base}"><a class="skip" href="#main">跳到主要內容</a><header class="header"><a class="brand" href="${href('index.html')}"><span class="seal">柯</span><span>${brand}<small>${subtitle}</small></span></a><nav aria-label="主導覽"><a ${active==='home'?'aria-current="page"':''} href="${href('index.html')}">首頁</a><a ${active==='read'?'aria-current="page"':''} href="${href('contents.html')}">讀紀事</a><a ${active==='sources'?'aria-current="page"':''} href="${href('sources.html')}">查史料</a><a ${active==='community'?'aria-current="page"':''} href="${href('community.html')}">一起讀史</a></nav></header>
@@ -49,7 +53,7 @@ shell('index.html',subtitle,'以紀事本末的方式整理中國歷史，對照
 <section class="hero wrap"><div><p class="eyebrow">中國歷史 · 紀事本末 · 史料共讀</p><h1>循一事讀歷史，<br>據一書尋來處。</h1><p class="lead">南柯紀事是一個持續編纂的歷史閱讀計畫。<br>把事件的來龍去脈寫在一起，也把所據史料攤開，<br class="wide-only">邀你一起讀、提問、辨析。</p><div class="actions"><a class="button" href="contents.html">從西周開始讀 <span>↗</span></a><a class="button secondary" href="community.html">找人一起聊歷史</a></div><p class="hero-note">目前收錄 ${entries.length} 篇紀事 · ${totalSections} 個小節 · 正文與史料對讀</p></div><div class="hero-art" aria-hidden="true"><span class="art-label">南柯藏讀 · 周</span><div class="vertical-poem">以史為鑑<br>逐事而書</div><div class="art-line"></div><span class="art-seal">南柯<br>紀事</span><span class="art-bottom">讀史，也尋同好。</span></div></section>
 <section class="wrap section"><div class="section-heading"><div><p class="eyebrow">THE READING ROOM</p><h2>從一段歷史開始</h2></div><a href="contents.html">完整篇目 ↗</a></div>${entries.map((x,i)=>card(x,i)).join('')}</section>
 <section class="wrap section"><div class="section-heading"><div><p class="eyebrow">FIND A PASSAGE</p><h2>你正在找哪一段？</h2></div></div>${searchUI()}<noscript><p>搜尋需啟用 JavaScript；仍可透過<a href="contents.html">完整目錄</a>閱讀全部篇章。</p></noscript></section>
-<section class="invitation"><div class="wrap"><p class="eyebrow">一起讀史</p><h2>一段史料，可以有不只一種讀法。</h2><p>哪裡記載不同？這句應該怎麼解？你的問題，也可以成為下一段討論的起點。</p><a class="button" href="community.html">看看如何參與 ↗</a></div></section>`, 'home',{'@type':'WebSite'});
+<section class="invitation"><div class="wrap"><p class="eyebrow">一起讀史</p><h2>一段史料，可以有不只一種讀法。</h2><p>哪裡記載不同？這句應該怎麼解？你的問題，也可以成為下一段討論的起點。</p><a class="button" href="community.html">看看如何參與 ↗</a></div></section>`, 'home',{'@type':'WebSite','@id':site+'#website',name:brand,alternateName:'南柯',publisher:{'@type':'Organization',name:brand,url:site}});
 function searchUI(){return `<div class="search-box"><label for="site-search">搜尋篇名、小節、正文或史料</label><input id="site-search" type="search" placeholder="例如：昭王、牧野、尚書" autocomplete="off" aria-controls="search-results"><p id="search-summary" role="status">輸入關鍵字，尋找相關段落。</p><div id="search-results"></div></div>`;}
 for(const ref of [false,true]) shell(ref?'sources.html':'contents.html',ref?'史料目錄':'紀事目錄',ref?'依篇章與小節閱讀南柯紀事所據古籍原文。':'南柯紀事正文目錄：依朝代、紀與紀事，閱讀中國歷史事件。',`<section class="wrap section"><p class="eyebrow">${ref?'SOURCE INDEX':'TABLE OF CONTENTS'}</p><h1>${ref?'史料目錄':'紀事目錄'}</h1><p class="lead">${ref?'沿著正文的小節，回到古籍的文字。':'依朝代入卷，沿事件讀下去。'}</p>${entries.map((x,i)=>card(x,i,ref)).join('')}</section>`,ref?'sources':'read');
 for(const {d,c,e} of entries)for(const ref of [false,true]){
