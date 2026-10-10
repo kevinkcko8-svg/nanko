@@ -4,7 +4,7 @@ import {fileURLToPath} from 'node:url';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const out=path.join(root,'_site');
 fs.rmSync(out,{recursive:true,force:true});fs.mkdirSync(out);
-for(const name of ['index.html','contents.html','sources.html','community.html','about.html','sitemap.xml','assets','articles','sources','author-7c4f1e.html','app.js','data.js','site-data.json','dev-log.json','styles.css']){
+for(const name of ['index.html','contents.html','sources.html','community.html','about.html','sitemap.xml','googleee692dbd7863a3c7.html','assets','articles','sources','author-7c4f1e.html','app.js','data.js','site-data.json','dev-log.json','styles.css']){
   fs.cpSync(path.join(root,name),path.join(out,name),{recursive:true});
 }
 fs.writeFileSync(path.join(out,'.nojekyll'),'');
