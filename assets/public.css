@@ -21,3 +21,34 @@
   .vertical-poem { top: 65px; right: 24px; font-size: 28px; }
   .art-seal { top: 135px; left: 18px; font-size: 17px; }
 }
+
+/* Square homepage artwork; larger corner inscriptions and seal-script preference. */
+@media (min-width: 851px) {
+  .hero { grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: 42px; }
+}
+.hero-art {
+  width: 100%;
+  max-width: 480px;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  justify-self: end;
+}
+.art-label { top: 22px; left: 25px; font-size: 15px; letter-spacing: 2px; z-index: 2; }
+.art-bottom { bottom: 24px; right: 20px; font-size: 16px; letter-spacing: 3px; }
+.art-seal {
+  font-family: "FZXiaoZhuanTi-S13T", "方正小篆体", "小篆", "篆書", "篆体", "DFKai-SB", "BiauKai", var(--serif);
+  font-size: 26px;
+  top: 36%;
+  left: 10%;
+  gap: 5px;
+}
+@media (min-width: 851px) {
+  .vertical-poem { top: 20%; right: 13%; font-size: clamp(27px, 2.7vw, 36px); }
+}
+@media (min-width: 601px) and (max-width: 850px) {
+  .hero-art { height: auto; }
+  .vertical-poem { top: 20%; right: 9%; font-size: clamp(22px, 3vw, 28px); }
+  .art-seal { top: 35%; left: 7%; font-size: 20px; }
+  .art-label { font-size: 12px; }
+  .art-bottom { font-size: 13px; }
+}
