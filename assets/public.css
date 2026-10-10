@@ -5,3 +5,19 @@
 
 /* Homepage editorial-method introduction */
 .editorial-method{border-top:1px solid var(--line);padding-top:44px}.method-content{max-width:850px;padding:26px 32px 8px;background:var(--white);border:1px solid var(--line);border-left:3px solid var(--green);border-radius:3px}.method-content p{line-height:2.05;letter-spacing:.015em}@media(max-width:600px){.method-content{padding:20px 20px 4px}.editorial-method{padding-top:30px}}
+
+/* Enlarged homepage scroll and traditional right-to-left seal inscription */
+@media (min-width: 851px) {
+  .hero { grid-template-columns: minmax(0, 1.16fr) minmax(0, .84fr); gap: 46px; }
+  .hero-art { height: 465px; }
+  .vertical-poem { top: 85px; right: 55px; font-size: 36px; }
+}
+.hero-art { box-shadow: 0 14px 32px rgba(38,58,50,.06); }
+.art-seal { display: inline-flex; flex-direction: row-reverse; align-items: flex-start; gap: 7px; top: 135px; left: 42px; font-size: 21px; line-height: 1.15; letter-spacing: .07em; padding: 10px 8px; }
+.art-seal span { writing-mode: vertical-rl; text-orientation: upright; }
+@media (min-width: 601px) and (max-width: 850px) {
+  .hero { grid-template-columns: 1.13fr .87fr; }
+  .hero-art { height: 385px; }
+  .vertical-poem { top: 65px; right: 24px; font-size: 28px; }
+  .art-seal { top: 135px; left: 18px; font-size: 17px; }
+}
