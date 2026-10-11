@@ -4,7 +4,11 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const read=p=>fs.readFileSync(path.join(root,p),'utf8');
+import {spawnSync} from 'node:child_process';
+for(const name of ['app.js','scripts/build.mjs']){const result=spawnSync(process.execPath,['--check',path.join(root,name)],{encoding:'utf8'});assert.equal(result.status,0,name+': '+result.stderr);}
 const entries=JSON.parse(read('site-data.json')).dynasties.flatMap(d=>d.chronicles.flatMap(c=>c.entries));
+const dynasties=JSON.parse(read('site-data.json')).dynasties;
+for(const d of dynasties)for(const c of d.chronicles){assert.ok(read('contents.html').includes(c.name),'missing chronicle group '+c.name);if(c.title)assert.ok(read('contents.html').includes(c.title),'missing chronicle theme '+c.title);}
 const files=['index.html','contents.html','sources.html','community.html','about.html',...entries.flatMap(e=>[`articles/${e.id}/index.html`,`sources/${e.id}/index.html`])];
 const unescape=s=>s.replace(/&quot;/g,'"').replace(/&#39;/g,"'").replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&amp;/g,'&');
 for(const file of files){
