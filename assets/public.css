@@ -52,3 +52,16 @@
   .art-label { font-size: 12px; }
   .art-bottom { font-size: 13px; }
 }
+
+
+/* Grouped dynasty / chronicle reading catalog */
+.dynasty-index{margin:25px 0 38px}
+.dynasty-index-title{font-size:22px;line-height:1.5;margin:0 0 18px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+.chronicle-index{margin:22px 0 30px}
+.chronicle-index-header{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin:0 0 13px}
+.chronicle-index-header h3{font-size:21px;line-height:1.6;margin:0}
+.chronicle-index-theme{font-weight:400;color:var(--muted);font-size:16px}
+.chronicle-index-count,.chronicle-index-summary,.chronicle-empty{font-size:13px;color:var(--muted)}
+.chronicle-index-summary{margin:0 0 16px}
+.chronicle-cards{display:grid;gap:10px}
+.chronicle-empty{border:1px dashed var(--line);background:var(--white);padding:16px 20px;margin:0;border-radius:4px}
