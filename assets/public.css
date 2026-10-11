@@ -60,7 +60,7 @@
 .chronicle-index{margin:22px 0 30px}
 .chronicle-index-header{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin:0 0 13px}
 .chronicle-index-header h3{font-size:21px;line-height:1.6;margin:0}
-.chronicle-index-theme{font-weight:400;color:var(--muted);font-size:16px}
+.chronicle-index-theme{font:inherit;color:inherit;letter-spacing:inherit}
 .chronicle-index-count,.chronicle-index-summary,.chronicle-empty{font-size:13px;color:var(--muted)}
 .chronicle-index-summary{margin:0 0 16px}
 .chronicle-cards{display:grid;gap:10px}
