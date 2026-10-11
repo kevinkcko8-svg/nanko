@@ -58,7 +58,7 @@
     const error=document.getElementById('gateError');
     const submit=document.getElementById('gateSubmit');
     const hash=value=>{let h=5381;for(let i=0;i<value.length;i++)h=(((h<<5)+h)^value.charCodeAt(i))>>>0;return h>>>0};
-    const addScript=src=>new Promise((resolve,reject)=>{const s=document.createElement('script');s.src=src+'?v=3';s.onload=resolve;s.onerror=()=>reject(new Error('無法載入 '+src));document.body.appendChild(s)});
+    const addScript=src=>new Promise((resolve,reject)=>{const s=document.createElement('script');s.src=src+'?v=4';s.onload=resolve;s.onerror=()=>reject(new Error('無法載入 '+src));document.body.appendChild(s)});
     let loading=false,loaded=false;
     async function openWorkspace(){
       if(loaded)return;
