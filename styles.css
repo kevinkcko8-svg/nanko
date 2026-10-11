@@ -10,4 +10,4 @@
 .chronicle-manager .field{margin:0 0 10px}
 .chronicle-actions{display:flex;flex-wrap:wrap;gap:8px;margin:5px 0 10px}
 .chronicle-actions .small-button:disabled{opacity:.45;cursor:not-allowed}
-.chronicle-theme{font-weight:400;font-size:13px;color:var(--muted)}
+.chronicle-theme{font:inherit;color:inherit}
