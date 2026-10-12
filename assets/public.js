@@ -12,6 +12,18 @@ function redirectLegacy(){if(location.hash.startsWith('#/')){
 }return false;}
 if(redirectLegacy())return;
 window.addEventListener('hashchange',redirectLegacy);
+// Keep the timeline link visible even when generated HTML is rebuilt.
+(function ensureTimelineNavigation(){
+  const nav=document.querySelector('.header nav[aria-label="主導覽"]');
+  if(!nav || nav.querySelector('a[href$="timeline.html"]'))return;
+  const link=document.createElement('a');
+  link.href=base+'timeline.html';
+  link.textContent='年表';
+  if(location.pathname.endsWith('/timeline.html'))link.setAttribute('aria-current','page');
+  const community=Array.from(nav.querySelectorAll('a')).find(a=>a.getAttribute('href')?.includes('community.html'));
+  nav.insertBefore(link,community||null);
+})();
+
 const status=document.getElementById('status');let timer;
 function announce(text){status.textContent=text;status.classList.add('visible');clearTimeout(timer);timer=setTimeout(()=>status.classList.remove('visible'),4000);}
 document.querySelectorAll('[data-copy-link]').forEach(button=>button.addEventListener('click',async()=>{
