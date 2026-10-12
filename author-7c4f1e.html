@@ -32,7 +32,8 @@
   </section>
 
   <div id="authorWorkspace" hidden>
-    <div style="padding:10px 22px;background:#e9eee5;font-size:13px">作者工作台：草稿會儲存在目前瀏覽器。 <a href="index.html" style="text-decoration:underline">返回公開閱讀版 →</a>　<a href="timeline.html?edit=1#timelineEditor" style="text-decoration:underline">編輯年表 →</a> <button id="lockWorkspace" class="text-button" type="button" style="float:right">鎖定工作台</button></div>
+    <div style="padding:10px 22px;background:#e9eee5;font-size:13px">作者工作台：草稿會儲存在目前瀏覽器。 <a href="index.html" style="text-decoration:underline">返回公開閱讀版 →</a>　<button id="openTimelineEditor" type="button" class="text-button" style="text-decoration:underline">編輯年表 →</button> <button id="lockWorkspace" class="text-button" type="button" style="float:right">鎖定工作台</button></div>
+    <section id="authorTimelinePanel" hidden style="padding:20px 22px;background:#f7f5ef;border-bottom:1px solid #d9ddd4"><div style="display:flex;gap:16px;align-items:center;justify-content:space-between"><h2 style="margin:0">編輯中國歷史年表</h2><button id="closeTimelineEditor" class="text-button" type="button">關閉編輯區 ×</button></div><p style="font-size:14px;color:#667268">此處直接編輯年表；儲存為本機草稿後，下載 JSON 並更新 GitHub 才會公開。</p><iframe id="timelineEditorFrame" title="年表編輯" style="display:block;width:100%;height:720px;border:1px solid #d9ddd4;background:#fffdf8" loading="lazy"></iframe></section>
     <header class="topbar">
       <div class="topbar-inner">
         <a class="brand" href="#/" aria-label="南柯紀事首頁"><span class="brand-mark">柯</span><span class="brand-name">南柯紀事</span></a>
@@ -72,6 +73,15 @@
         loaded=true;gate.hidden=true;workspace.hidden=false;error.textContent='';
       }catch(err){console.error(err);error.textContent='工作台載入失敗，請重新整理後再試。';sessionStorage.removeItem(SESSION);submit.disabled=false;loading=false;}
     }
+    const editToggle=document.getElementById('openTimelineEditor');
+    const editPanel=document.getElementById('authorTimelinePanel');
+    const editFrame=document.getElementById('timelineEditorFrame');
+    editToggle.addEventListener('click',()=>{
+      editPanel.hidden=false;
+      if(!editFrame.getAttribute('src'))editFrame.src='timeline.html?edit=1#timelineEditor';
+      editPanel.scrollIntoView({behavior:'smooth',block:'start'});
+    });
+    document.getElementById('closeTimelineEditor').addEventListener('click',()=>{editPanel.hidden=true});
     form.addEventListener('submit',e=>{e.preventDefault();error.textContent='';if(hash(input.value)!==TARGET){error.textContent='密碼不正確。';input.select();return}sessionStorage.setItem(SESSION,'1');input.value='';openWorkspace();});
     document.getElementById('lockWorkspace').addEventListener('click',()=>{sessionStorage.removeItem(SESSION);location.reload()});
     if(sessionStorage.getItem(SESSION)==='1')openWorkspace();
