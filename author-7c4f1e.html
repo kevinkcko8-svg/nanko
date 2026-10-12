@@ -33,8 +33,19 @@
 
   <div id="authorWorkspace" hidden>
     <div style="padding:10px 22px;background:#e9eee5;font-size:13px">作者工作台：草稿會儲存在目前瀏覽器。 <a href="index.html" style="text-decoration:underline">返回公開閱讀版 →</a>　<button id="openTimelineEditor" type="button" class="text-button" style="text-decoration:underline">編輯年表 →</button> <button id="lockWorkspace" class="text-button" type="button" style="float:right">鎖定工作台</button></div>
-    <section id="authorTimelinePanel" hidden style="padding:20px 22px;background:#f7f5ef;border-bottom:1px solid #d9ddd4"><div style="display:flex;gap:16px;align-items:center;justify-content:space-between"><h2 style="margin:0">編輯中國歷史年表</h2><button id="closeTimelineEditor" class="text-button" type="button">關閉編輯區 ×</button></div><p style="font-size:14px;color:#667268">此處直接編輯年表；儲存為本機草稿後，下載 JSON 並更新 GitHub 才會公開。</p><iframe id="timelineEditorFrame" title="年表編輯" style="display:block;width:100%;height:720px;border:1px solid #d9ddd4;background:#fffdf8" loading="lazy"></iframe></section>
-    <header class="topbar">
+    <section id="authorTimelinePanel" hidden style="padding:22px;background:#f7f5ef;border-bottom:1px solid #d9ddd4">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap"><h2 style="margin:0">新增／編輯年表</h2><button id="closeTimelineEditor" class="text-button" type="button">關閉 ×</button></div>
+      <p style="margin:10px 0 20px;color:#667268">輸入西元年份，再填入中國史書紀年及事件。已存在的年份會載入原資料，方便修改。</p>
+      <form id="timelineEntryForm" style="max-width:850px;display:grid;gap:14px">
+        <label style="display:grid;gap:5px">西元年份（例如：前841、前827、2026）<input id="timelineEditYear" required value="前841" placeholder="前841" style="padding:11px;border:1px solid #b9c2b7;border-radius:4px"></label>
+        <label style="display:grid;gap:5px">中國史書紀年<input id="timelineEditEra" placeholder="例如：共和元年" style="padding:11px;border:1px solid #b9c2b7;border-radius:4px"></label>
+        <label style="display:grid;gap:5px">事件<textarea id="timelineEditEvent" rows="6" placeholder="記載這一年發生的事件；沒有事件就留白" style="width:100%;padding:12px;border:1px solid #b9c2b7;border-radius:4px;font:inherit;box-sizing:border-box"></textarea></label>
+        <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="primary-button" type="submit">儲存此年</button><button id="timelineNextYear" class="text-button" type="button">儲存並編輯下一年 →</button><button id="timelineDownload" class="text-button" type="button">下載年表 JSON（供公開發布）</button></div>
+        <p id="timelineEditStatus" role="status" style="color:#355749;margin:0;min-height:24px"></p>
+      </form>
+      <p style="font-size:13px;color:#667268">儲存後會保留在此瀏覽器的草稿中；下載 JSON 並替換 GitHub 倉庫根目錄的 timeline-data.json 後，訪客才會看見修改。</p>
+    </section>
+        <header class="topbar">
       <div class="topbar-inner">
         <a class="brand" href="#/" aria-label="南柯紀事首頁"><span class="brand-mark">柯</span><span class="brand-name">南柯紀事</span></a>
         <nav class="topnav" aria-label="主導覽"><a href="#/" data-nav="home">首頁</a><a href="#/contents" data-nav="contents">正文目錄</a><a href="#/sources" data-nav="sources">史料目錄</a></nav>
@@ -75,10 +86,8 @@
     }
     const editToggle=document.getElementById('openTimelineEditor');
     const editPanel=document.getElementById('authorTimelinePanel');
-    const editFrame=document.getElementById('timelineEditorFrame');
     editToggle.addEventListener('click',()=>{
       editPanel.hidden=false;
-      if(!editFrame.getAttribute('src'))editFrame.src='timeline.html?edit=1#timelineEditor';
       editPanel.scrollIntoView({behavior:'smooth',block:'start'});
     });
     document.getElementById('closeTimelineEditor').addEventListener('click',()=>{editPanel.hidden=true});
@@ -87,5 +96,6 @@
     if(sessionStorage.getItem(SESSION)==='1')openWorkspace();
   })();
   </script>
+  <script defer src="./assets/author-timeline-editor.js"></script>
 </body>
 </html>
