@@ -8,6 +8,7 @@ let published={},draft={};
 try{draft=JSON.parse(localStorage.getItem(KEY)||'{}');if(!draft||typeof draft!=='object'||Array.isArray(draft))draft={}}catch{draft={}}
 const zh=n=>{const d=['零','一','二','三','四','五','六','七','八','九'];if(n<10)return d[n];if(n<20)return '十'+(n%10?d[n%10]:'');return d[Math.floor(n/10)]+'十'+(n%10?d[n%10]:'')};
 const preset=n=>n>=-841&&n<=-828?'共和'+zh(-n-840)+'年':n>=-827&&n<=-782?'周宣王'+zh(n+828)+'年':n>=-781&&n<=-771?'周幽王'+zh(n+782)+'年':n>=-770&&n<=-720?'周平王'+zh(n+771)+'年':'';
+const charCount=s=>[...String(s||"").replace(/\s/g,"")].length;
 let current=null;
 function renderPreview(){
   if(!preview)return;
@@ -20,10 +21,10 @@ function renderPreview(){
     const era=y===n?eraEl.value:(typeof entry.era==='string'?entry.era:preset(y));
     const event=y===n?eventEl.value:(typeof entry.event==='string'?entry.event:'');
     const tr=document.createElement('tr');if(y===n){tr.style.background='#f0f4e8';tr.style.fontWeight='600'}
-    for(const value of [fmt(y)+'年',era,event]){const td=document.createElement('td');td.textContent=value;td.style.cssText='padding:12px;border-top:1px solid #d9ddd4;white-space:pre-wrap;overflow-wrap:anywhere;vertical-align:top';tr.appendChild(td)}
+    for(const value of [fmt(y)+'年',era,event,charCount(event)]){const td=document.createElement('td');td.textContent=value;td.style.cssText='padding:12px;border-top:1px solid #d9ddd4;white-space:pre-wrap;overflow-wrap:anywhere;vertical-align:top';tr.appendChild(td)}
     fragment.appendChild(tr);
   }
-  preview.replaceChildren(fragment);
+  preview.replaceChildren(fragment);const all=new Set([...Object.keys(published),...Object.keys(draft),String(n)]);let total=0,written=0;for(const k of all){const x=Number(k);const v=x===n?eventEl.value:(Object.prototype.hasOwnProperty.call(draft,k)?draft[k]?.event:published[k]?.event)||'';const c=charCount(v);total+=c;if(c)written++}const summary=document.getElementById('timelineWordStatsEditor');if(summary)summary.textContent='本年事件：'+charCount(eventEl.value)+' 字｜已編錄 '+written+' 年事件｜事件總字數：'+total.toLocaleString('zh-TW')+' 字（不含空白與換行，含尚未儲存的當前年份）';
 }
 function load(){const n=parse(yearEl.value);if(n===null){status.textContent='請輸入西元前841年至今年的有效年份，沒有西元0年。';return}current=n;const entry=Object.prototype.hasOwnProperty.call(draft,n)?draft[n]:(published[n]||{});eraEl.value=typeof entry.era==='string'?entry.era:preset(n);eventEl.value=typeof entry.event==='string'?entry.event:'';status.textContent='正在編輯：'+(n<0?'西元前'+(-n):'西元'+n)+'年';renderPreview()}
 yearEl.addEventListener('change',load);
