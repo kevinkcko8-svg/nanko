@@ -14,7 +14,7 @@ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const clean=s=>String(s??'').replace(/\s+/g,' ').trim();
 function numeral(value){const n=Number(value),digits=['','壹','貳','參','肆','伍','陸','柒','捌','玖'];if(n>0&&n<10)return digits[n];if(n>=10&&n<100)return (n>=20?digits[Math.floor(n/10)]:'')+'拾'+digits[n%10];return String(value);}
 const entries=data.dynasties.flatMap(d=>d.chronicles.flatMap(c=>c.entries.map(e=>({d,c,e}))));
-const urls=[];
+const urls=[site+'timeline.html'];
 const ids=new Set();
 for(const {e} of entries){if(!/^[a-zA-Z0-9_-]+$/.test(e.id)||ids.has(e.id))throw Error('Invalid or duplicate entry id: '+e.id);ids.add(e.id);}
 // These two directories are generated exclusively by this script.
@@ -42,7 +42,7 @@ ${file==='index.html'&&seo.googleSiteVerification?`<meta name="google-site-verif
 <link rel="sitemap" type="application/xml" href="${site}sitemap.xml">
 <link rel="canonical" href="${canonical}"><meta property="og:type" content="${structured['@type']==='Article'?'article':'website'}"><meta property="og:locale" content="zh_TW"><meta property="og:site_name" content="${brand}"><meta property="og:title" content="${esc(title)}｜${brand}"><meta property="og:description" content="${esc(desc)}"><meta property="og:url" content="${canonical}">
 <link rel="icon" href="${href('assets/seal.svg')}" type="image/svg+xml"><link rel="stylesheet" href="${href('assets/public.css')}"><script type="application/ld+json">${json}</script><script defer src="${href('assets/public.js')}"></script></head>
-<body data-base="${base}"><a class="skip" href="#main">跳到主要內容</a><header class="header"><a class="brand" href="${href('index.html')}"><span class="seal">柯</span><span>${brand}<small>${subtitle}</small></span></a><nav aria-label="主導覽"><a ${active==='home'?'aria-current="page"':''} href="${href('index.html')}">首頁</a><a ${active==='read'?'aria-current="page"':''} href="${href('contents.html')}">讀紀事</a><a ${active==='sources'?'aria-current="page"':''} href="${href('sources.html')}">查史料</a><a ${active==='community'?'aria-current="page"':''} href="${href('community.html')}">一起讀史</a></nav></header>
+<body data-base="${base}"><a class="skip" href="#main">跳到主要內容</a><header class="header"><a class="brand" href="${href('index.html')}"><span class="seal">柯</span><span>${brand}<small>${subtitle}</small></span></a><nav aria-label="主導覽"><a ${active==='home'?'aria-current="page"':''} href="${href('index.html')}">首頁</a><a ${active==='read'?'aria-current="page"':''} href="${href('contents.html')}">讀紀事</a><a ${active==='sources'?'aria-current="page"':''} href="${href('sources.html')}">查史料</a><a href="${href('timeline.html')}">年表</a><a ${active==='community'?'aria-current="page"':''} href="${href('community.html')}">一起讀史</a></nav></header>
 <main id="main">${body.replaceAll('@@BASE@@',base)}</main><footer><div><b>${brand}</b><p>以朝代為綱，分紀而記其事。循篇讀史，據書尋源。</p></div><div class="footer-links"><a href="${href('about.html')}">關於本站</a><a href="${href('community.html')}">參與討論</a><a href="${href('editor.html')}">作者工作台</a></div></footer><p id="status" class="status" role="status" aria-live="polite"></p></body></html>`;
   const dest=path.join(root,file);fs.mkdirSync(path.dirname(dest),{recursive:true});fs.writeFileSync(dest,result);urls.push(canonical);
 }
