@@ -34,6 +34,13 @@ for(const e of entries){
 }
 const index=JSON.parse(read('assets/search-index.json'));
 assert.equal(index.length,entries.reduce((n,e)=>n+e.sections.reduce((m,s)=>m+1+(s.sources||[]).length,0),0));
-assert.equal((read('sitemap.xml').match(/<loc>/g)||[]).length,files.length);
+assert.equal((read('sitemap.xml').match(/<loc>/g)||[]).length,files.length+1);
+assert.ok(read('sitemap.xml').includes('https://kevinkcko8-svg.github.io/nanko/timeline.html'),'timeline missing from sitemap');
+assert.ok(read('index.html').includes('href="./timeline.html"'),'timeline missing from homepage navigation');
+assert.ok(fs.existsSync(path.join(root,'assets/timeline.js')),'timeline JavaScript missing');
+assert.match(read('timeline.html'),/id="timelineBody"/,'timeline table missing');
+const timelineData=JSON.parse(read('timeline-data.json'));
+assert.ok(timelineData.entries && timelineData.entries['-841'] && timelineData.entries['-827'],'timeline entries missing');
+assert.ok(Object.keys(timelineData.entries).length >= 73,'published timeline appears incomplete');
 assert.match(read('editor.html'),/noindex,nofollow/);
 console.log(`PASS: ${files.length} pages, all local links/anchors, exact article/source preservation, ${index.length} searchable passages.`);
