@@ -2,6 +2,8 @@
 'use strict';
 const FIRST=-841, LAST=new Date().getFullYear(), KEY='nanke-timeline-draft-v1';
 const body=document.getElementById('timelineBody');
+// Always begin with the full published chronology, regardless of browser form restoration.
+document.getElementById('pageSize').value='published';
 const sizeInput=document.getElementById('pageSize');
 const yearInput=document.getElementById('yearInput');
 const rangeText=document.getElementById('rangeText');
