@@ -14,12 +14,17 @@ const encode=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>'
 const characters=s=>[...String(s||'').replace(/\s/g,'')].length;
 const yearKeys=Object.keys(entries).map(Number).filter(n=>Number.isInteger(n)&&n!==0).sort((a,b)=>a-b);
 const label=n=>n<0?'前'+(-n)+'年':n+'年';
-const rows=yearKeys.map(n=>{const e=entries[n]||{};return '<tr><td>'+label(n)+'</td><td>'+encode(e.era)+'</td><td>'+encode(e.event)+'</td><td>'+characters(e.event)+'</td></tr>'}).join('');
+const rows=yearKeys.map(n=>{const e=entries[n]||{};return '<tr id="timeline-'+(n<0?'bce-'+(-n):'ce-'+n)+'" data-year="'+n+'"><td>'+label(n)+'</td><td>'+encode(e.era)+'</td><td>'+encode(e.event)+'</td><td>'+characters(e.event)+'</td></tr>'}).join('');
 const timelineFile=path.join(out,'timeline.html');
 let timelineHtml=fs.readFileSync(timelineFile,'utf8');
 if(!/<tbody id="timelineBody">[\s\S]*?<\/tbody>/.test(timelineHtml))throw Error('Timeline fallback table not found');
 timelineHtml=timelineHtml.replace(/<tbody id="timelineBody">[\s\S]*?<\/tbody>/,'<tbody id="timelineBody">'+rows+'</tbody>');
 timelineHtml=timelineHtml.replace(/(<p id="timelineWordStats"[^>]*>)[\s\S]*?(<\/p>)/,'$1已收錄事件字數：'+Object.values(entries).reduce((sum,e)=>sum+characters(e?.event),0).toLocaleString('zh-TW')+' 字（不含空白及換行）$2');
+const first=yearKeys[0],last=yearKeys[yearKeys.length-1];
+if(yearKeys.length){
+  timelineHtml=timelineHtml.replace(/(<span id="rangeText"[^>]*>)[\s\S]*?(<\/span>)/,(_m,start,end)=>start+label(first)+' — '+label(last)+'（'+yearKeys.length+' 年）'+end);
+  timelineHtml=timelineHtml.replace(/(<p id="latestPublishedYear"[^>]*>)[\s\S]*?(<\/p>)/,(_m,start,end)=>start+'最新編錄年份：'+label(last)+end);
+}
 fs.writeFileSync(timelineFile,timelineHtml);
 fs.writeFileSync(path.join(out,'.nojekyll'),'');
 if(!fs.existsSync(path.join(out,'timeline.html')) || !fs.existsSync(path.join(out,'timeline-data.json'))) throw Error('Timeline publication files are missing');
