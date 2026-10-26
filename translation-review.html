@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>譯文審稿｜南柯紀事</title>
+<style>body{background:#f7f5ef;color:#283e32;font:16px/1.8 system-ui,sans-serif;margin:0}main{max-width:1040px;margin:35px auto;padding:0 20px}h1{font-family:serif;margin-bottom:4px}a{color:#3f6752}.note{background:#fff8df;border-left:4px solid #b79b50;padding:12px 16px}.layout{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:22px}.panel{background:#fffdf8;border:1px solid #dddcd1;padding:18px;border-radius:8px}textarea{box-sizing:border-box;width:100%;height:65vh;min-height:350px;resize:vertical;padding:12px;border:1px solid #c4c9be;border-radius:5px;font:16px/1.85 system-ui;background:white;color:#222}pre{white-space:pre-wrap;word-break:break-word;font:16px/1.9 serif;max-height:65vh;overflow:auto}button{background:#415d4b;color:white;border:0;border-radius:5px;padding:10px 15px;cursor:pointer;font:inherit;margin:4px 6px 4px 0}.secondary{background:#e6ebe2;color:#304b38}.toolbar{margin:15px 0}.small{font-size:.86rem;color:#637064}@media(max-width:760px){.layout{grid-template-columns:1fr}}</style></head>
+<body><main><p><a href="./index.html">← 返回南柯紀事</a></p><h1>白話譯文審稿</h1><p>鄭伯莊公 · 鄭伯克段</p>
+<p class="note"><strong>此工具只在你的瀏覽器內編輯。</strong>修改不會自動發佈，也不會改動 GitHub。審定後請下載完整的 <code>translations.json</code>，上傳替換 GitHub 倉庫 <code>assets/translations.json</code>。不要在此輸入任何 GitHub Token。</p>
+<div class="toolbar"><button id="download">下載審定版 JSON</button><button id="copy" class="secondary">複製譯文</button><button id="reset" class="secondary">還原線上譯文</button><span id="status" role="status" class="small">讀取中……</span></div>
+<div class="layout"><section class="panel"><h2>史料原文</h2><pre id="original">讀取中……</pre></section><section class="panel"><h2>可編輯白話翻譯</h2><textarea id="translation" spellcheck="false" aria-label="編輯白話譯文" placeholder="讀取中……"></textarea><p class="small">修改後請記得下載 JSON；重新整理頁面會丟失未下載的修改。</p></section></div></main>
+<script>
+(()=>{'use strict';const ARTICLE='6ca3a808-ca09-46ab-97ef-459f361fb1f6',SECTION='sec-01f267ef-062d-42b5-b641-28b8f2fbfc1d';
+const el=id=>document.getElementById(id);let all=null,originalTranslation='';
+const setStatus=s=>el('status').textContent=s;
+Promise.all([fetch('./assets/translations.json').then(r=>{if(!r.ok)throw Error('譯文檔案讀取失敗');return r.json()}),fetch('./articles/'+ARTICLE+'/').then(r=>{if(!r.ok)throw Error('原文讀取失敗');return r.text()})]).then(([data,html])=>{
+all=data;originalTranslation=data[ARTICLE]?.[SECTION]||'';el('translation').value=originalTranslation;
+const doc=new DOMParser().parseFromString(html,'text/html'),prose=doc.getElementById(SECTION)?.querySelector('.prose');
+el('original').textContent=prose?.textContent?.trim()||'找不到原文，請至公開紀事檢查。';setStatus('已載入；可以開始審稿。');
+}).catch(e=>setStatus(e.message));
+el('translation').addEventListener('input',()=>setStatus('已有未下載的修改'));
+el('reset').addEventListener('click',()=>{if(!all)return;if(confirm('確定要捨棄目前修改、還原線上譯文嗎？')){el('translation').value=originalTranslation;setStatus('已還原線上版本')}});
+el('copy').addEventListener('click',async()=>{try{await navigator.clipboard.writeText(el('translation').value);setStatus('譯文已複製')}catch{setStatus('無法存取剪貼簿')}});
+el('download').addEventListener('click',()=>{if(!all)return setStatus('請先等候資料載入');const output=JSON.parse(JSON.stringify(all));output[ARTICLE][SECTION]=el('translation').value;const blob=new Blob([JSON.stringify(output,null,2)+'\n'],{type:'application/json;charset=utf-8'});const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='translations.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),5000);setStatus('已下載 JSON；請上傳至 GitHub 才會公開生效')});
+})();
+</script></body></html>
