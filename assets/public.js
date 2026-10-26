@@ -74,7 +74,7 @@ if(poem)poem.innerHTML='序時記事<br>逐事而書';
   mode=b.dataset.mode;
   if(mode!=='original'&&translations===null){
    try{const response=await fetch(base+'assets/translations.json');if(!response.ok)throw Error();
-    const all=await response.json(),articleId=location.pathname.match(/\\/articles\\/([^/]+)/)?.[1];
+    const all=await response.json(),articleId=location.pathname.split('/')[location.pathname.split('/').indexOf('articles')+1];
     translations=(articleId&&all[articleId])||{};
    }catch{translations={}}
    build();
