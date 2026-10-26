@@ -4,7 +4,7 @@
 <body><main><p><a href="./index.html">← 返回南柯紀事</a></p><h1>白話譯文審稿</h1><p>選擇紀事與小紀事，即可逐節對照、編輯白話譯文。</p><div class="toolbar"><label for="article">紀事：</label><select id="article"></select> <label for="section">小紀事：</label><select id="section"></select></div>
 <p class="note"><strong>此工具只在你的瀏覽器內編輯。</strong>修改不會自動發佈，也不會改動 GitHub。審定後請下載完整的 <code>translations.json</code>，上傳替換 GitHub 倉庫 <code>assets/translations.json</code>。不要在此輸入任何 GitHub Token。</p>
 <div class="toolbar"><button id="download">下載審定版 JSON</button><button id="copy" class="secondary">複製譯文</button><button id="reset" class="secondary">還原線上譯文</button><span id="status" role="status" class="small">讀取中……</span></div>
-<div class="layout"><section class="panel"><h2>史料原文</h2><pre id="original">讀取中……</pre></section><section class="panel"><h2>可編輯白話翻譯</h2><textarea id="translation" spellcheck="false" aria-label="編輯白話譯文" placeholder="讀取中……"></textarea><p class="small">切換小紀事時會保留本次審稿修改，但重新整理頁面會丟失未下載的修改。若要發布，請下載完整 JSON。</p></section></div></main>
+<div class="layout"><section class="panel"><h2>史料原文</h2><pre id="original">請先選擇小紀事。</pre></section><section class="panel"><h2>可編輯白話翻譯</h2><textarea id="translation" spellcheck="false" aria-label="編輯白話譯文" placeholder="本節尚無譯文，請在這裡編寫。"></textarea><p class="small">切換小紀事時會保留本次審稿修改，但重新整理頁面會丟失未下載的修改。若要發布，請下載完整 JSON。</p></section></div></main>
 <script>
 (()=>{'use strict';
 const el=id=>document.getElementById(id),status=s=>el('status').textContent=s;
@@ -54,7 +54,7 @@ async function initialize(){
  if(!catalog.length)throw Error('找不到可編輯的小紀事');
  for(const x of catalog)el('article').add(new Option(x.name,x.id));
  article=catalog[0].id;renderSections();
- }catch(e){status('載入失敗：'+e.message)}
+ }catch(e){el('original').textContent='原文未能載入。';el('translation').placeholder='資料載入失敗，請檢查部署或重新整理。';status('載入失敗：'+e.message)}
 }
 el('article').addEventListener('change',e=>switchArticle(e.target.value));
 el('section').addEventListener('change',e=>switchSection(e.target.value));
