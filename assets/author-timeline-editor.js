@@ -31,6 +31,16 @@ yearEl.addEventListener('change',load);
 for(const field of [eraEl,eventEl])field.addEventListener('input',renderPreview);
 function save(){const n=parse(yearEl.value);if(n===null){load();return false}draft[n]={era:eraEl.value.trim(),event:eventEl.value.trim()};try{localStorage.setItem(KEY,JSON.stringify(draft))}catch(e){status.textContent='儲存失敗：瀏覽器儲存空間無法使用';return false}current=n;status.textContent='已儲存 '+(n<0?'前'+(-n):n)+' 年的草稿（尚未公開）';renderPreview();return true}
 document.getElementById('timelineEntryForm').addEventListener('submit',e=>{e.preventDefault();save()});
+const jumpForm=document.getElementById('timelineJumpForm'),jumpYear=document.getElementById('timelineJumpYear');
+if(jumpForm&&jumpYear)jumpForm.addEventListener('submit',e=>{
+  e.preventDefault();
+  const target=parse(jumpYear.value);
+  if(target===null){status.textContent='請輸入西元前841年至今年的有效年份，沒有西元0年。';jumpYear.focus();return}
+  if(!save())return;
+  yearEl.value=fmt(target);load();jumpYear.value=fmt(target);
+  status.textContent='已儲存原年份草稿（尚未公開）；正在編輯：'+(target<0?'西元前'+(-target):'西元'+target)+'年';
+  eventEl.focus();
+});
 document.getElementById('timelinePrevYear').addEventListener('click',()=>{if(!save())return;if(current<=FIRST){status.textContent='已到年表起始年（前841年）';return}yearEl.value=fmt(adjacent(current,-1));load();eventEl.focus()});
 document.getElementById('timelineNextYear').addEventListener('click',()=>{if(!save())return;const n=current===-1?1:current+1;if(n>new Date().getFullYear()){status.textContent='已到今年';return}yearEl.value=fmt(n);load();eventEl.focus()});
 document.getElementById('timelineDownload').addEventListener('click',()=>{const all={...published,...draft};const blob=new Blob([JSON.stringify({version:1,entries:all},null,2)+'\n'],{type:'application/json'});const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='timeline-data.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);status.textContent='JSON 已下載；請上傳至 GitHub 才會更新公開網站。'});
