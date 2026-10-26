@@ -45,7 +45,7 @@ async function initialize(){
  const links=[...doc.querySelectorAll('a.entry-card[href*="/articles/"]')];
  if(!links.length)throw Error('找不到紀事目錄');
  const items=await Promise.all(links.map(async link=>{
- const match=link.getAttribute('href').match(/articles\\/([^/]+)/);
+ const match=link.getAttribute('href').match(new RegExp('articles/([^/]+)'));
  if(!match)return null;
  const id=match[1];
  try{return {id,name:link.querySelector('h3')?.textContent?.trim()||id,sections:await loadArticle(id)}}catch{return null}
@@ -72,7 +72,7 @@ el('download').addEventListener('click',()=>{
  if(value.trim())output[aid][sid]=value;
  else delete output[aid][sid];
  }
- const blob=new Blob([JSON.stringify(output,null,2)+'\\n'],{type:'application/json;charset=utf-8'});
+ const blob=new Blob([JSON.stringify(output,null,2)+String.fromCharCode(10)],{type:'application/json;charset=utf-8'});
  const url=URL.createObjectURL(blob),link=document.createElement('a');
  link.href=url;link.download='translations.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),5000);
  status('已下載全部譯文資料，請將檔案上傳至 GitHub 的 assets/translations.json');
