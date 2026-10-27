@@ -71,3 +71,6 @@
 .chronicle-more:hover{border-bottom-color:var(--green)}
 .chronicle-index+.chronicle-index{border-top:1px solid var(--line);padding-top:28px;margin-top:32px}
 @media(min-width:900px){.chronicle-cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* Understated, read-only site-wide visitor totals */
+footer .visitor-counts{margin:8px 0 0;color:var(--muted);font-size:11px;letter-spacing:.025em;font-variant-numeric:tabular-nums;opacity:.85}
