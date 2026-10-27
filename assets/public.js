@@ -12,6 +12,8 @@ function redirectLegacy(){if(location.hash.startsWith('#/')){
 }return false;}
 if(redirectLegacy())return;
 window.addEventListener('hashchange',redirectLegacy);
+// Shared visitor counter; inserted once on every public reading page.
+(function(){const s=document.createElement('script');s.src=base+'assets/visitor-counts.js';document.head.append(s)})();
 // Keep the timeline link visible even when generated HTML is rebuilt.
 (function ensureTimelineNavigation(){
   const nav=document.querySelector('.header nav[aria-label="主導覽"]');
