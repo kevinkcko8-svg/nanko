@@ -8,6 +8,10 @@
   <title>作者工作台｜南柯紀事</title>
   <link rel="stylesheet" href="styles.css">
   <meta name="robots" content="noindex,nofollow">
+  <script>
+    // Author-only branch: exclude this browser from public visit counts.
+    try { localStorage.setItem('nanko-counter-exclude-v1', '1'); } catch (e) {}
+  </script>
   <script src="data.js"></script>
   <script>
     window.NANKE_READY = fetch('./site-data.json', { cache: 'no-store' })
