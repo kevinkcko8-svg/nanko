@@ -60,7 +60,7 @@ if(poem)poem.innerHTML='序時記事<br>逐事而書';
   if(section.querySelector('.modern-prose'))continue;
   const panel=document.createElement('div');panel.className='modern-prose';panel.hidden=true;
   const label=document.createElement('p');label.className='translation-label';label.textContent='白話翻譯';
-  const body=document.createElement('div');const value=translations?.[section.id];
+  const body=document.createElement('div');const value=translations?.[section.id.replace(/^sec-/, '')];
   if(typeof value==='string'&&value.trim())body.textContent=value;
   else{body.textContent='本節尚未提供白話翻譯。';body.className='missing-translation'}
   panel.append(label,body);section.querySelector('.prose')?.after(panel);
